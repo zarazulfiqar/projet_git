@@ -1,0 +1,86 @@
+# Auteure : Zara Zulfiqar Nourelhouda Djeriou
+# Date : 02/03/20226
+# Formation : MASTER 1 MLSD FA 
+
+# Objectif du projet
+
+Ce projet a pour objectif de simuler un projet collaboratif de data science en utilisant GitHub pour le travail en équipe et Docker pour garantir la reproductibilité.
+Chaque méthode de réduction de dimension est développée dans une branche dédiée, puis intégrée dans la branche principale afin de permettre une comparaison des performances.
+
+Le projet se concentre sur la réduction de dimension et la visualisation de données urbaines, à partir d’un jeu de données décrivant différents profils de villes à travers le monde.
+
+# Strcutre du projet
+.
+├── data/
+│   └── city_lifestyle_dataset.csv
+├── notebooks/
+│   ├── pca.ipynb
+│   └── umap.ipynb
+├── outputs/
+│   ├── pca_emb_2d.csv
+│   └── umap_emb_2d.csv
+├── evaluate.py
+├── requirements.txt
+├── Dockerfile
+└── README.md
+
+# Données 
+Le jeu de données city_lifestyle_dataset.csv contient des informations synthétiques sur des villes réparties dans plusieurs régions du monde.
+Il inclut notamment des variables économiques, environnementales et sociales (revenus, pollution, transports, qualité de vie, etc.).
+
+Les variables non numériques (city_name, country) ont été exclues des analyses afin de se concentrer uniquement sur les dimensions quantitatives.
+
+# Méthodes de réduction de dimension
+- PCA (Analyse en Composantes Principales)
+
+La PCA est utilisée pour résumer la structure globale des données en projetant les observations dans un espace à deux dimensions.
+Elle permet d’identifier les axes expliquant la plus grande part de variance, principalement liés aux dimensions économiques et de qualité de vie.
+
+Les résultats sont visualisés dans un graphique 2D dans le ficher pca.ipynb et exportés dans le fichier :
+
+outputs/pca_emb_2d.csv
+
+- UMAP
+
+UMAP est une méthode non linéaire de réduction de dimension, plus adaptée à la préservation de la structure locale des données.
+Elle permet de mettre en évidence des regroupements plus marqués de villes partageant des profils similaires.
+
+Les résultats appliqué dans le fichier umap.ipynb sont exportés dans :
+
+outputs/umap_emb_2d.csv
+
+# Comparaison des méthodes
+
+La comparaison est réalisée à l’aide de la métrique trustworthiness, qui mesure dans quelle mesure les relations de voisinage dans l’espace original sont conservées dans l’espace réduit.
+
+Le script evaluate.py :
+
+charge les données originales
+charge les projections 2D issues de la PCA et de UMAP
+calcule la trustworthiness pour chaque méthode
+affiche les résultats de manière lisible
+
+- Exécution du script de comparaison
+	En local (Python)
+	python evaluate.py
+
+
+- Exécution avec Docker
+Construire l’image Docker
+docker build -t projet_git .
+Lancer le conteneur
+docker run projet_git
+(Optionnel) Utilisation d’un volume Docker
+docker run -v $(pwd)/outputs:/app/outputs projet_git
+
+Cela permet de mettre à jour les fichiers de sortie sans reconstruire l’image.
+
+# Technologies utilisées
+
+Python 3.12
+Pandas
+NumPy
+Scikit-learn
+UMAP-learn
+Git / GitHub
+Docker
